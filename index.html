@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo do Clima</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom, #a8e6cf, #dcedc1);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+    h1 {
+      font-size: 28px;
+      color: #388e3c;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      background: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #2e7d32;
+    }
+    .progress {
+      height: 12px;
+      background: #c8e6c9;
+      border-radius: 10px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: #66bb6a;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌍 Jogo do Clima 🌱</h1>
+    <div id="game">
+      <p id="question">Pronto para aprender e brincar?</p>
+      <div id="choices"></div>
+      <div class="progress">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <p id="feedback" class="feedback"></p>
+      <button id="nextBtn" style="display:none;">Próxima Pergunta ➡️</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "O que acontece quando deitamos lixo no chão?", a: ["Ajuda as plantas 🌱", "Polui a natureza 🚯"], correct: 1 },
+      { q: "Qual destas é uma energia limpa?", a: ["Carvão ⛏️", "Sol ☀️"], correct: 1 },
+      { q: "Se fecharmos a torneira enquanto escovamos os dentes, o que acontece?", a: ["Gastamos mais água 💧", "Evitamos desperdício 👍"], correct: 1 },
+      { q: "O que é melhor para o planeta?", a: ["Andar de bicicleta 🚴", "Carro sozinho 🚗"], correct: 0 },
+      { q: "Reciclar significa...", a: ["Usar outra vez ♻️", "Deitar fora 🚮"], correct: 0 },
+      { q: "Qual animal precisa do gelo para viver?", a: ["Urso polar 🐻‍❄️", "Leão 🦁"], correct: 0 }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const choicesEl = document.getElementById('choices');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBar = document.getElementById('progress-bar');
+
+    function showQuestion() {
+      feedbackEl.textContent = '';
+      nextBtn.style.display = 'none';
+      const q = questions[current];
+      questionEl.textContent = q.q;
+      choicesEl.innerHTML = '';
+      q.a.forEach((choice, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = choice;
+        btn.onclick = () => selectAnswer(i);
+        choicesEl.appendChild(btn);
+      });
+      progressBar.style.width = ((current)/questions.length*100) + '%';
+    }
+
+    function selectAnswer(i) {
+      const q = questions[current];
+      if (i === q.correct) {
+        feedbackEl.textContent = "🎉 Muito bem! Acertaste!";
+        feedbackEl.style.color = "#2e7d32";
+        score++;
+      } else {
+        feedbackEl.textContent = "😮 Ops! Não é essa. Vamos aprender juntos!";
+        feedbackEl.style.color = "#c62828";
+      }
+      nextBtn.style.display = 'block';
+    }
+
+    nextBtn.onclick = () => {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        endGame();
+      }
+    };
+
+    function endGame() {
+      questionEl.textContent = "Fim do Jogo!";
+      choicesEl.innerHTML = '';
+      feedbackEl.textContent = `🎉 Parabéns! Você fez ${score} pontos de ${questions.length}! Continue cuidando do planeta! 🌍`;
+      nextBtn.style.display = 'none';
+      progressBar.style.width = '100%';
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
